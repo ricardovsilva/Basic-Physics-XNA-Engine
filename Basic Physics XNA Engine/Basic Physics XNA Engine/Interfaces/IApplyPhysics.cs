@@ -46,6 +46,11 @@ namespace Basic_Physics_XNA_Engine.Interfaces
         float Mass { get; set; }
 
         /// <summary>
+        /// Gets or sets reference to world gravity.    
+        /// </summary>
+        Gravity WorldGravity { get; set; }
+
+        /// <summary>
         /// Apply force to this object.
         /// </summary>
         /// <param name="forceToApply">Force to apply.</param>

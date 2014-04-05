@@ -79,7 +79,7 @@ namespace Basic_Physics_XNA_Engine
         /// <param name="forceToApply">Force to apply.</param>
         public void ApplyForce(Vector2 forceToApply)
         {
-            throw new System.NotImplementedException();
+
         }
 
         /// <summary>
