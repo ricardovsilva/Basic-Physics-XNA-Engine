@@ -8,7 +8,6 @@
 //-----------------------------------------------------------------------
 namespace Basic_Physics_XNA_Engine.Interfaces
 {
-    using System.Security.Cryptography.X509Certificates;
     using Microsoft.Xna.Framework;
 
     /// <summary>
