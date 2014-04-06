@@ -13,6 +13,7 @@ namespace GameTest
 {
     using System.ComponentModel;
     using Basic_Physics_XNA_Engine;
+    using Basic_Physics_XNA_Engine.Interfaces;
 
     /// <summary>
     /// This is the main type for your game
@@ -21,7 +22,9 @@ namespace GameTest
     {
         GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
+        private ColliderManager colliderManager;
         private Cube testCube;
+        private Floor floorTest;
         private Gravity worldGravity;
 
         public Game1()
@@ -29,7 +32,8 @@ namespace GameTest
             graphics = new GraphicsDeviceManager(this)
             {
                 PreferredBackBufferWidth = 1920,
-                PreferredBackBufferHeight = 1080
+                PreferredBackBufferHeight = 1080,
+                IsFullScreen = false
             };
 
             Content.RootDirectory = "Content";
@@ -60,11 +64,24 @@ namespace GameTest
             {
                 Position = new Vector2(1000, 100),
                 WorldGravity = worldGravity,
-                Size = new Vector2(32,32)
+                Size = new Vector2(32,32),
+                Mass = 50
             };
+
+            this.floorTest = new Floor(this)
+            {
+                Position = new Vector2(0, 900),
+                Size = new Vector2(this.graphics.PreferredBackBufferWidth, 100)
+            };
+
+            this.colliderManager = new ColliderManager(this);
 
             foreach (var component in this.Components)
             {
+                if (component is ICollidable)
+                {
+                    this.colliderManager.AddCollidable(component as ICollidable);
+                }
                 component.Initialize();
             }
         }

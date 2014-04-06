@@ -59,7 +59,9 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColliderManager.cs" />
     <Compile Include="Cube.cs" />
+    <Compile Include="Floor.cs" />
     <Compile Include="Gravity.cs" />
     <Compile Include="Interfaces\IApplyPhysics.cs" />
     <Compile Include="Interfaces\ICollidable.cs" />

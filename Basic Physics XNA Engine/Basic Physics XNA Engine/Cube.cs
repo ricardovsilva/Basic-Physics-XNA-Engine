@@ -20,8 +20,6 @@ namespace Basic_Physics_XNA_Engine
     /// </summary>
     public class Cube : DrawableGameComponent, IApplyPhysics, ICollidable
     {
-        private Rectangle bounds;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Cube"/> class.
         /// </summary>
@@ -31,6 +29,7 @@ namespace Basic_Physics_XNA_Engine
         {
             IsActive = true;
             IsPhysicsOn = true;
+            this.Velocity = new Vector2(0,0);
             game.Components.Add(this);
         }
 
@@ -109,7 +108,14 @@ namespace Basic_Physics_XNA_Engine
         /// <param name="forceToApply">Force to apply.</param>
         public void ApplyForce(Vector2 forceToApply)
         {
+            Vector2 thisForce = new Vector2
+            {
+                X = this.Mass*this.Acceleration.X,
+                Y = this.Mass*this.Acceleration.Y
+            };
 
+            this.Acceleration = thisForce + forceToApply;
+            this.Position += Acceleration;
         }
 
         private Texture2D CubeTexture2D
@@ -125,7 +131,6 @@ namespace Basic_Physics_XNA_Engine
         /// in collision.</param>
         public void OnCollisionHappens(ICollidable collider)
         {
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -175,13 +180,14 @@ namespace Basic_Physics_XNA_Engine
         /// <param name="gameTime">Reference to game time.</param>
         private void ApplyGravity(GameTime gameTime)
         {
-            this.Acceleration += new Vector2
+            this.Acceleration = new Vector2
             {
-                X = 0,
-                Y = this.WorldGravity.Force * this.Game.TargetElapsedTime.Milliseconds/(this.WorldGravity.Force * 1000)
+                X = Acceleration.X,
+                Y = this.WorldGravity.Force
             };
 
-            this.Position += this.Acceleration;
+            this.Velocity += this.Acceleration * gameTime.ElapsedGameTime.Milliseconds/(this.WorldGravity.Force * 1000);
+            this.Position += this.Velocity;
         }
     }
 }
