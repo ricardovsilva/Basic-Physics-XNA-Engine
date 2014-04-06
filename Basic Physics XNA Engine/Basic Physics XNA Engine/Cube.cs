@@ -149,9 +149,9 @@ namespace Basic_Physics_XNA_Engine
                 resultForce += Forces.Dequeue();
             }
 
-            resultForce += this.Force;
+            //resultForce += this.Force;
 
-            this.Acceleration = (resultForce/this.Mass) * Game.TargetElapsedTime.Milliseconds/1000f;
+            this.Acceleration = resultForce/this.Mass;
         }
 
         private Texture2D CubeTexture2D
@@ -202,7 +202,7 @@ namespace Basic_Physics_XNA_Engine
             if (this.UsesGamepad)
             {
                 GamePadState state = GamePad.GetState((PlayerIndex) this.GamepadIndex);
-                if (state.ThumbSticks.Left.X != 0)
+                /*if (state.ThumbSticks.Left.X != 0)
                 {
                     this.ApplyForce(new Vector2
                     {
@@ -211,7 +211,7 @@ namespace Basic_Physics_XNA_Engine
                             (Convert.ToInt32(state.Buttons.A == ButtonState.Pressed)*
                              gameTime.ElapsedGameTime.Milliseconds/1000)*MovementForce
                     }, gameTime);
-                }
+                }*/
             }
 
             base.Update(gameTime);
@@ -239,6 +239,8 @@ namespace Basic_Physics_XNA_Engine
                 X = 0,
                 Y = WorldGravity.Force * Mass
             };
+
+            gravityForce = gravityForce*elapsedTime;
 
             this.ApplyForce(gravityForce, gameTime);
         }
