@@ -19,14 +19,15 @@ namespace GameTest
         private ColliderManager colliderManager;
         private Cube testCube;
         private Floor floorTest;
+        private Floor firstPlatform;
         private Gravity worldGravity;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1920,
-                PreferredBackBufferHeight = 1080,
+                PreferredBackBufferWidth = 800,
+                PreferredBackBufferHeight = 600,
                 IsFullScreen = false
             };
 
@@ -56,7 +57,7 @@ namespace GameTest
             this.worldGravity = new Gravity(Gravity.Forces.Earth);
             this.testCube = new Cube(this)
             {
-                Position = new Vector2(1000, 100),
+                Position = new Vector2(400, 50),
                 WorldGravity = worldGravity,
                 Size = new Vector2(32,32),
                 Mass = 50
@@ -64,8 +65,14 @@ namespace GameTest
 
             this.floorTest = new Floor(this)
             {
-                Position = new Vector2(0, 900),
-                Size = new Vector2(this.graphics.PreferredBackBufferWidth, 100)
+                Position = new Vector2(0, 570),
+                Size = new Vector2(this.graphics.PreferredBackBufferWidth, 30)
+            };
+
+            this.firstPlatform = new Floor(this)
+            {
+                Position = new Vector2(0, 400),
+                Size = new Vector2(150, 30)
             };
 
             this.colliderManager = new ColliderManager(this);

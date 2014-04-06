@@ -24,8 +24,8 @@ namespace Basic_Physics_XNA_Engine
     /// </summary>
     public class Cube : DrawableGameComponent, IApplyPhysics, ICollidable, IControllable
     {
-        private const float MovementForce = 20000f;
-        private const float JumpForce = 20000f;
+        private const float MovementForce = 2000f;
+        private const float JumpForce = 2000f;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cube"/> class.
@@ -38,6 +38,7 @@ namespace Basic_Physics_XNA_Engine
             IsPhysicsOn = true;
             this.Velocity = new Vector2(0,0);
             this.UsesGamepad = true;
+            this.UsesKeyboard = true;
             this.GamepadIndex = 0;
             game.Components.Add(this);
         }
@@ -199,17 +200,12 @@ namespace Basic_Physics_XNA_Engine
 
             if (this.UsesGamepad)
             {
-                GamePadState state = GamePad.GetState((PlayerIndex) this.GamepadIndex);
-                if (state.ThumbSticks.Left.X != 0)
-                {
-                    this.ApplyForce(new Vector2
-                    {
-                        X = (state.ThumbSticks.Left.X*gameTime.ElapsedGameTime.Milliseconds/1000)*MovementForce,
-                        Y =
-                            (Convert.ToInt32(state.Buttons.A == ButtonState.Pressed)*
-                             gameTime.ElapsedGameTime.Milliseconds/1000)*MovementForce
-                    }, gameTime);
-                }
+                GetGamepadState(gameTime);
+            }
+
+            if (this.UsesKeyboard)
+            {
+                GetKeyboardState(gameTime);
             }
 
             base.Update(gameTime);
@@ -231,7 +227,6 @@ namespace Basic_Physics_XNA_Engine
         /// <param name="gameTime">Reference to game time.</param>
         private void ApplyGravity(GameTime gameTime)
         {
-            float elapsedTime = gameTime.ElapsedGameTime.Milliseconds / 1000f;
             Vector2 gravityForce = new Vector2()
             {
                 X = 0,
@@ -241,6 +236,47 @@ namespace Basic_Physics_XNA_Engine
             //gravityForce = gravityForce*elapsedTime;
 
             this.ApplyForce(gravityForce, gameTime);
+        }
+
+        private void GetGamepadState(GameTime gameTime)
+        {
+            GamePadState gamePadState = GamePad.GetState((PlayerIndex) this.GamepadIndex);
+            if (gamePadState.ThumbSticks.Left.X != 0)
+            {
+                this.ApplyForce(new Vector2
+                {
+                    X = gamePadState.ThumbSticks.Left.X*MovementForce,
+                    Y = 0
+                }, gameTime);
+            }
+
+            if (gamePadState.Buttons.A.Equals(ButtonState.Pressed))
+            {
+                this.ApplyForce(new Vector2
+                {
+                    X = 0,
+                    Y = -(Convert.ToInt32(gamePadState.Buttons.A == ButtonState.Pressed) * JumpForce)
+                }, gameTime);
+            }
+        }
+
+        private void GetKeyboardState(GameTime gameTime)
+        {
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                this.ApplyForce(new Vector2(-MovementForce, 0), gameTime);
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                this.ApplyForce(new Vector2(MovementForce, 0), gameTime);
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Space))
+            {
+                this.ApplyForce(new Vector2(0, -JumpForce), gameTime);
+            }
         }
 
         /// <summary>
