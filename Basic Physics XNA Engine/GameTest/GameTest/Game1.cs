@@ -58,7 +58,7 @@ namespace GameTest
             this.testCube = new Cube(this)
             {
                 Position = new Vector2(400, 50),
-                WorldGravity = worldGravity,
+                WorldGravity = this.worldGravity,
                 Size = new Vector2(32,32),
                 Mass = 50
             };
@@ -107,6 +107,15 @@ namespace GameTest
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+            if (GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B))
+            {
+                this.testCube.WorldGravity = new Gravity(-testCube.WorldGravity.Force);
+            }
+            else
+            {
+                this.testCube.WorldGravity = new Gravity(Gravity.Forces.Earth);
+            }
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -118,9 +127,8 @@ namespace GameTest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
-            this.DrawGrid(20);
             base.Draw(gameTime);
             spriteBatch.End();
         }

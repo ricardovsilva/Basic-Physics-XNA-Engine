@@ -11,7 +11,7 @@ namespace Basic_Physics_XNA_Engine
     /// </summary>
     public class ColliderManager : Microsoft.Xna.Framework.GameComponent
     {
-        private int collisionTollerance = 4;
+        private int collisionTollerance = 0;
 
         public ColliderManager(Game game)
             : base(game)

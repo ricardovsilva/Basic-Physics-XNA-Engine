@@ -24,8 +24,8 @@ namespace Basic_Physics_XNA_Engine
     /// </summary>
     public class Cube : DrawableGameComponent, IApplyPhysics, ICollidable, IControllable
     {
-        private const float MovementForce = 2000f;
-        private const float JumpForce = 2000f;
+        private const float MovementForce = 200f;
+        private const float JumpForce = 900f;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cube"/> class.
@@ -230,7 +230,7 @@ namespace Basic_Physics_XNA_Engine
             Vector2 gravityForce = new Vector2()
             {
                 X = 0,
-                Y = WorldGravity.Force * Mass
+                Y = this.WorldGravity.Force * Mass
             };
 
             //gravityForce = gravityForce*elapsedTime;
