@@ -46,7 +46,7 @@ namespace Basic_Physics_XNA_Engine.Interfaces
         float Mass { get; set; }
 
         /// <summary>
-        /// Gets or sets reference to world gravity.    
+        /// Gets or sets reference to world gravity.
         /// </summary>
         Gravity WorldGravity { get; set; }
 

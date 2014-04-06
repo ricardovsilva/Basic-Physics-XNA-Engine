@@ -48,10 +48,10 @@ namespace Basic_Physics_XNA_Engine
             get
             {
                 return new Rectangle(
-                    (int) this.Position.X,
-                    (int) this.Position.Y,
-                    (int) (this.Size.X),
-                    (int) (this.Size.Y));
+    (int)this.Position.X,
+    (int)this.Position.Y,
+    (int)(this.Size.X),
+    (int)(this.Size.Y));
             }
         }
 
@@ -175,13 +175,17 @@ namespace Basic_Physics_XNA_Engine
         /// <param name="gameTime">Reference to game time.</param>
         private void ApplyGravity(GameTime gameTime)
         {
-            this.Acceleration += new Vector2
+            this.Position += new Vector2
             {
-                X = 0,
-                Y = this.WorldGravity.Force * this.Game.TargetElapsedTime.Milliseconds/(this.WorldGravity.Force * 1000)
+                X = this.Position.X,
+                Y = this.Position.Y + this.WorldGravity.Force * gameTime.ElapsedGameTime.Milliseconds/1000
             };
 
-            this.Position += this.Acceleration;
+            this.Acceleration = new Vector2
+            {
+                X = this.Acceleration.X,
+                Y = this.Acceleration.Y + this.WorldGravity.Force*this.Game.TargetElapsedTime.Milliseconds/1000
+            };
         }
     }
 }

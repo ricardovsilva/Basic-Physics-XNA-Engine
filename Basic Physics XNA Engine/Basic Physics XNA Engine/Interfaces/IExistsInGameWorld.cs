@@ -27,6 +27,12 @@ namespace Basic_Physics_XNA_Engine.Interfaces
         Vector2 Position { get; set; }
 
         /// <summary>
+        /// Gets or sets a value that indicating
+        /// bounds of object.
+        /// </summary>
+        Rectangle Bounds { get; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether object
         /// is active in game world.Sometimes you may want 
         /// temporarily remove object from game, for this 

@@ -23,12 +23,6 @@ namespace Basic_Physics_XNA_Engine.Interfaces
     public interface ICollidable : IExistsInGameWorld
     {
         /// <summary>
-        /// Gets or sets a value that indicating
-        /// bounds of object.
-        /// </summary>
-        Rectangle Bounds { get; set; }
-
-        /// <summary>
         /// Method to be trigger when this object
         /// get involved in collision.
         /// </summary>
