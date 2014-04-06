@@ -28,6 +28,7 @@ namespace Basic_Physics_XNA_Engine.Interfaces
         /// </summary>
         /// <param name="collider">Other object participating
         /// in collision.</param>
-        void OnCollisionHappens(ICollidable collider);
+        /// <param name="gameTime">Reference to game time.</param>
+        void OnCollisionHappens(ICollidable collider, GameTime gameTime);
     }
 }

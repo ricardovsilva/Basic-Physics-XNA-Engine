@@ -8,9 +8,13 @@
 //-----------------------------------------------------------------------
 namespace Basic_Physics_XNA_Engine
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using Interfaces;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
 
     /// <summary>
     /// This is a cube used to tests and to
@@ -18,8 +22,11 @@ namespace Basic_Physics_XNA_Engine
     /// and implements <see cref="IApplyPhysics"/> and
     /// <see cref="ICollidable"/>.
     /// </summary>
-    public class Cube : DrawableGameComponent, IApplyPhysics, ICollidable
+    public class Cube : DrawableGameComponent, IApplyPhysics, ICollidable, IControllable
     {
+        private const float MovementForce = 20000f;
+        private const float JumpForce = 20000f;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Cube"/> class.
         /// </summary>
@@ -30,6 +37,8 @@ namespace Basic_Physics_XNA_Engine
             IsActive = true;
             IsPhysicsOn = true;
             this.Velocity = new Vector2(0,0);
+            this.UsesGamepad = true;
+            this.GamepadIndex = 0;
             game.Components.Add(this);
         }
 
@@ -75,6 +84,20 @@ namespace Basic_Physics_XNA_Engine
         /// </summary>
         public bool IsPhysicsOn { get; set; }
 
+        public Vector2 Force
+        {
+            get
+            {
+                Vector2 thisForce = new Vector2
+                {
+                    X = this.Mass * this.Velocity.X,
+                    Y = this.Mass * this.Velocity.Y
+                };
+
+                return thisForce;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the velocity of
         /// object.
@@ -103,19 +126,30 @@ namespace Basic_Physics_XNA_Engine
         public Vector2 Size { get; set; }
 
         /// <summary>
+        /// Gets or sets a queue of forces.
+        /// </summary>
+        private Queue<Vector2> Forces { get; set; }
+
+        /// <summary>
         /// Apply force to this object.
         /// </summary>
         /// <param name="forceToApply">Force to apply.</param>
-        public void ApplyForce(Vector2 forceToApply)
+        /// <param name="gameTime">Reference to game time.</param>
+        public void ApplyForce(Vector2 forceToApply, GameTime gameTime)
         {
-            Vector2 thisForce = new Vector2
-            {
-                X = this.Mass*this.Acceleration.X,
-                Y = this.Mass*this.Acceleration.Y
-            };
+            Forces.Enqueue(forceToApply);
+        }
 
-            this.Acceleration = thisForce + forceToApply;
-            this.Position += Acceleration;
+        private void CalculateForces()
+        {
+            Vector2 resultForce = Vector2.Zero;
+
+            while (Forces.Count > 0)
+            {
+                resultForce += Forces.Dequeue();
+            }
+
+            this.Acceleration = resultForce/this.Mass;
         }
 
         private Texture2D CubeTexture2D
@@ -129,7 +163,7 @@ namespace Basic_Physics_XNA_Engine
         /// </summary>
         /// <param name="collider">Other object participating
         /// in collision.</param>
-        public void OnCollisionHappens(ICollidable collider)
+        public void OnCollisionHappens(ICollidable collider, GameTime gameTime)
         {
         }
 
@@ -139,6 +173,7 @@ namespace Basic_Physics_XNA_Engine
         /// </summary>
         public override void Initialize()
         {
+            this.Forces = new Queue<Vector2>();
             base.Initialize();
         }
 
@@ -159,8 +194,24 @@ namespace Basic_Physics_XNA_Engine
         {
             if (this.IsPhysicsOn)
             {
-                ApplyGravity(gameTime);
+                ApplyPhysics(gameTime);
             }
+
+            if (this.UsesGamepad)
+            {
+                GamePadState state = GamePad.GetState((PlayerIndex) this.GamepadIndex);
+                if (state.ThumbSticks.Left.X != 0)
+                {
+                    this.ApplyForce(new Vector2
+                    {
+                        X = (state.ThumbSticks.Left.X*gameTime.ElapsedGameTime.Milliseconds/1000)*MovementForce,
+                        Y =
+                            (Convert.ToInt32(state.Buttons.A == ButtonState.Pressed)*
+                             gameTime.ElapsedGameTime.Milliseconds/1000)*MovementForce
+                    }, gameTime);
+                }
+            }
+
             base.Update(gameTime);
         }
 
@@ -180,14 +231,46 @@ namespace Basic_Physics_XNA_Engine
         /// <param name="gameTime">Reference to game time.</param>
         private void ApplyGravity(GameTime gameTime)
         {
-            this.Acceleration = new Vector2
+            float elapsedTime = gameTime.ElapsedGameTime.Milliseconds / 1000f;
+            Vector2 gravityForce = new Vector2()
             {
-                X = Acceleration.X,
-                Y = this.WorldGravity.Force
+                X = 0,
+                Y = WorldGravity.Force * Mass
             };
 
-            this.Velocity += this.Acceleration * gameTime.ElapsedGameTime.Milliseconds/(this.WorldGravity.Force * 1000);
-            this.Position += this.Velocity;
+            //gravityForce = gravityForce*elapsedTime;
+
+            this.ApplyForce(gravityForce, gameTime);
+        }
+
+        /// <summary>
+        /// Apply physics to object.
+        /// </summary>
+        /// <param name="gameTime">Reference to game time.</param>
+        private void ApplyPhysics(GameTime gameTime)
+        {
+            ApplyGravity(gameTime);
+            CalculateForces();
+            this.Velocity += Acceleration * gameTime.ElapsedGameTime.Milliseconds/1000;
+            this.Position += Velocity;
+        }
+
+        public bool UsesKeyboard { get; set; }
+
+        public bool UsesGamepad { get; set; }
+
+        public int GamepadIndex { get; set; }
+
+        public ControllableState CurrentState
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+                throw new System.NotImplementedException();
+            }
         }
     }
 }

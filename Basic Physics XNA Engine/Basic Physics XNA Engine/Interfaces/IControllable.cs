@@ -14,6 +14,8 @@ namespace Basic_Physics_XNA_Engine.Interfaces
     /// </summary>
     public interface IControllable : IExistsInGameWorld
     {
+        ControllableState CurrentState {  get; set;}
+
         /// <summary>
         /// Gets or sets a value indicating whether
         /// this object is controllable by keyboard.
@@ -30,5 +32,12 @@ namespace Basic_Physics_XNA_Engine.Interfaces
         /// Gets or sets a value indicating gamepad index.
         /// </summary>
         int GamepadIndex { get; set; }
+    }
+
+    public enum ControllableState
+    {
+        Idle,
+        Running,
+        Jumping
     }
 }

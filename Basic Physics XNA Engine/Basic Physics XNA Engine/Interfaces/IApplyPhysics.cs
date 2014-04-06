@@ -40,6 +40,11 @@ namespace Basic_Physics_XNA_Engine.Interfaces
         Vector2 Acceleration { get; set; }
 
         /// <summary>
+        /// Gets force of object.
+        /// </summary>
+        Vector2 Force { get; }
+
+        /// <summary>
         /// Gets or sets representation
         /// of object mass.
         /// </summary>
@@ -54,6 +59,7 @@ namespace Basic_Physics_XNA_Engine.Interfaces
         /// Apply force to this object.
         /// </summary>
         /// <param name="forceToApply">Force to apply.</param>
-        void ApplyForce(Vector2 forceToApply);
+        /// <param name="gameTime">Reference to game time.</param>
+        void ApplyForce(Vector2 forceToApply, GameTime gameTime);
     }
 }

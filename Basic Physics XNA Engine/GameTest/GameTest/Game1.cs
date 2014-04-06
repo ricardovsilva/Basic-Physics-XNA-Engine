@@ -1,19 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 namespace GameTest
 {
     using System.ComponentModel;
     using Basic_Physics_XNA_Engine;
     using Basic_Physics_XNA_Engine.Interfaces;
+    using PrimitivesSample;
 
     /// <summary>
     /// This is the main type for your game
@@ -119,8 +113,36 @@ namespace GameTest
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
+            this.DrawGrid(20);
             base.Draw(gameTime);
             spriteBatch.End();
         }
+
+        private void DrawGrid(float gridSize)
+        {
+            // where can we put the stars? 
+            int screenWidth = graphics.GraphicsDevice.Viewport.Width;
+            int screenHeight = graphics.GraphicsDevice.Viewport.Height;
+
+            PrimitiveBatch primitiveBatch = new PrimitiveBatch(this.GraphicsDevice);
+            primitiveBatch.Begin(PrimitiveType.LineList);
+
+            for (float i = gridSize; i < screenWidth; i += gridSize)
+            {
+                //draw line verticaly            
+                primitiveBatch.AddVertex(new Vector2(i, 0), Color.White);
+                primitiveBatch.AddVertex(new Vector2(i, screenHeight), Color.White);
+            }
+
+            for (float i = gridSize; i < screenHeight; i += gridSize)
+            {
+                //draw line verticaly            
+                primitiveBatch.AddVertex(new Vector2(0, i), Color.White);
+                primitiveBatch.AddVertex(new Vector2(screenWidth, i), Color.White);
+            }
+
+            primitiveBatch.End();
+        }
+
     }
 }

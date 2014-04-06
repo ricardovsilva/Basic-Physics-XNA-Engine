@@ -72,7 +72,7 @@ namespace Basic_Physics_XNA_Engine
 
         public Gravity WorldGravity { get; set; }
 
-        public void ApplyForce(Vector2 forceToApply)
+        public void ApplyForce(Vector2 forceToApply, GameTime gameTime)
         {
             throw new System.NotImplementedException();
         }
@@ -95,17 +95,32 @@ namespace Basic_Physics_XNA_Engine
 
         public bool IsActive { get; set; }
 
-        public void OnCollisionHappens(ICollidable collider)
+        public void OnCollisionHappens(ICollidable collider, GameTime gameTime)
         {
             if (collider is IApplyPhysics)
             {
                 IApplyPhysics colliderPhysics = (IApplyPhysics) collider;
-                colliderPhysics.ApplyForce(new Vector2()
+
+                Vector2 weightForce = new Vector2
                 {
                     X = 0,
-                    Y = -(colliderPhysics.Mass * colliderPhysics.Acceleration.Y + colliderPhysics.Velocity.Y)
-                });
+                    Y = -(colliderPhysics.Mass * colliderPhysics.Velocity.Y)/(gameTime.ElapsedGameTime.Milliseconds/1000f)
+                };
+
+                weightForce = new Vector2
+                {
+                    X = 0,
+                    Y = weightForce.Y - colliderPhysics.WorldGravity.Force*colliderPhysics.Mass
+                };
+
+                colliderPhysics.ApplyForce(weightForce, gameTime);
             }
+        }
+
+
+        public Vector2 Force
+        {
+            get { throw new System.NotImplementedException(); }
         }
     }
 }

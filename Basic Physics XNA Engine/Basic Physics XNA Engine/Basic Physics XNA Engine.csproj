@@ -65,7 +65,9 @@
     <Compile Include="Gravity.cs" />
     <Compile Include="Interfaces\IApplyPhysics.cs" />
     <Compile Include="Interfaces\ICollidable.cs" />
+    <Compile Include="Interfaces\IControllable.cs" />
     <Compile Include="Interfaces\IExistsInGameWorld.cs" />
+    <Compile Include="PrimitiveBatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
