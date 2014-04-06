@@ -10,6 +10,7 @@ namespace Basic_Physics_XNA_Engine
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using Interfaces;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
@@ -83,6 +84,20 @@ namespace Basic_Physics_XNA_Engine
         /// </summary>
         public bool IsPhysicsOn { get; set; }
 
+        public Vector2 Force
+        {
+            get
+            {
+                Vector2 thisForce = new Vector2
+                {
+                    X = this.Mass*this.Acceleration.X,
+                    Y = this.Mass*this.Acceleration.Y
+                };
+
+                return thisForce;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the velocity of
         /// object.
@@ -110,6 +125,9 @@ namespace Basic_Physics_XNA_Engine
         /// </summary>
         public Vector2 Size { get; set; }
 
+        /// <summary>
+        /// Gets or sets a queue of forces.
+        /// </summary>
         private Queue<Vector2> Forces { get; set; }
 
         /// <summary>
@@ -119,15 +137,21 @@ namespace Basic_Physics_XNA_Engine
         /// <param name="gameTime">Reference to game time.</param>
         public void ApplyForce(Vector2 forceToApply, GameTime gameTime)
         {
-            Vector2 thisForce = new Vector2
+            Forces.Enqueue(forceToApply);
+        }
+
+        private void CalculateForces()
+        {
+            Vector2 resultForce = Vector2.Zero;
+
+            while (Forces.Count > 0)
             {
-                X = this.Mass*this.Acceleration.X,
-                Y = this.Mass*this.Acceleration.Y
-            };
+                resultForce += Forces.Dequeue();
+            }
 
-            Vector2 forceTotal = thisForce + forceToApply;
+            resultForce += this.Force;
 
-            this.Acceleration = forceTotal/this.Mass;
+            this.Acceleration = (resultForce/this.Mass) * Game.TargetElapsedTime.Milliseconds/1000f;
         }
 
         private Texture2D CubeTexture2D
@@ -151,6 +175,7 @@ namespace Basic_Physics_XNA_Engine
         /// </summary>
         public override void Initialize()
         {
+            this.Forces = new Queue<Vector2>();
             base.Initialize();
         }
 
@@ -215,8 +240,6 @@ namespace Basic_Physics_XNA_Engine
                 Y = WorldGravity.Force * Mass
             };
 
-            gravityForce = gravityForce*elapsedTime;
-
             this.ApplyForce(gravityForce, gameTime);
         }
 
@@ -227,7 +250,9 @@ namespace Basic_Physics_XNA_Engine
         private void ApplyPhysics(GameTime gameTime)
         {
             ApplyGravity(gameTime);
-            this.Position += this.Acceleration;
+            CalculateForces();
+            this.Velocity += Acceleration;
+            this.Position += Velocity;
         }
 
         public bool UsesKeyboard { get; set; }

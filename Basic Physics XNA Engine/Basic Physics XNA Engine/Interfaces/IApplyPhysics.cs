@@ -40,6 +40,11 @@ namespace Basic_Physics_XNA_Engine.Interfaces
         Vector2 Acceleration { get; set; }
 
         /// <summary>
+        /// Gets force of object.
+        /// </summary>
+        Vector2 Force { get; }
+
+        /// <summary>
         /// Gets or sets representation
         /// of object mass.
         /// </summary>

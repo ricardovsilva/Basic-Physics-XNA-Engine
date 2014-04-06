@@ -103,18 +103,24 @@ namespace Basic_Physics_XNA_Engine
                 Vector2 forceToApply = new Vector2
                 {
                     X = 0,
-                    Y = -(colliderPhysics.Mass*colliderPhysics.Acceleration.Y)
+                    Y = -(colliderPhysics.Force.Y)
                 };
 
                 Vector2 weightForce = new Vector2
                 {
                     X = 0,
-                    Y = -(colliderPhysics.Mass*colliderPhysics.WorldGravity.Force)
+                    Y = -(colliderPhysics.WorldGravity.Force * colliderPhysics.Mass)
                 };
 
                 forceToApply += weightForce;
                 colliderPhysics.ApplyForce(forceToApply, gameTime);
             }
+        }
+
+
+        public Vector2 Force
+        {
+            get { throw new System.NotImplementedException(); }
         }
     }
 }
