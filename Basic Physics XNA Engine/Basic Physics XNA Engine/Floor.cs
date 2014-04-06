@@ -100,11 +100,6 @@ namespace Basic_Physics_XNA_Engine
             if (collider is IApplyPhysics)
             {
                 IApplyPhysics colliderPhysics = (IApplyPhysics) collider;
-                Vector2 forceToApply = new Vector2
-                {
-                    X = 0,
-                    Y = -(colliderPhysics.Force.Y)
-                };
 
                 Vector2 weightForce = new Vector2
                 {
@@ -112,8 +107,7 @@ namespace Basic_Physics_XNA_Engine
                     Y = -(colliderPhysics.WorldGravity.Force * colliderPhysics.Mass)
                 };
 
-                forceToApply += weightForce;
-                colliderPhysics.ApplyForce(forceToApply, gameTime);
+                colliderPhysics.ApplyForce(weightForce, gameTime);
             }
         }
 

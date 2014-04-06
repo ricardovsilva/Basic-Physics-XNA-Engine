@@ -44,7 +44,6 @@ namespace Basic_Physics_XNA_Engine
                         && collidable.Bounds.Intersects(otherCollidable.Bounds))
                     {
                         collidable.OnCollisionHappens(otherCollidable, gameTime);
-                        otherCollidable.OnCollisionHappens(collidable, gameTime);
                     }
                 }
             }
