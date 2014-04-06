@@ -54,6 +54,7 @@ namespace Basic_Physics_XNA_Engine.Interfaces
         /// Apply force to this object.
         /// </summary>
         /// <param name="forceToApply">Force to apply.</param>
-        void ApplyForce(Vector2 forceToApply);
+        /// <param name="gameTime">Reference to game time.</param>
+        void ApplyForce(Vector2 forceToApply, GameTime gameTime);
     }
 }
