@@ -26,6 +26,7 @@ namespace Basic_Physics_XNA_Engine
     {
         private const float MovementForce = 200f;
         private const float JumpForce = 900f;
+        private const float PixelsPerMetre = 10f;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cube"/> class.
@@ -68,7 +69,23 @@ namespace Basic_Physics_XNA_Engine
         /// Gets or sets a value indicating position of object
         /// in game world.
         /// </summary>
-        public Vector2 Position { get; set; }
+        public Vector2 Position
+        {
+            get { return this.position; }
+            set
+            {
+                this.Delta = value - this.position;
+                this.position = value;
+            }
+        }
+
+        Vector2 position;
+
+        /// <summary>
+        /// Gets or sets a value indicating the change from previous
+        /// position.
+        /// </summary>
+        public Vector2 Delta { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether object
@@ -287,8 +304,8 @@ namespace Basic_Physics_XNA_Engine
         {
             ApplyGravity(gameTime);
             CalculateForces();
-            this.Velocity += Acceleration * gameTime.ElapsedGameTime.Milliseconds/1000;
-            this.Position += Velocity;
+            this.Velocity += Acceleration * gameTime.ElapsedGameTime.Milliseconds * 0.001f;
+            this.Position += PixelsPerMetre * Velocity * gameTime.ElapsedGameTime.Milliseconds * 0.001f;
         }
 
         public bool UsesKeyboard { get; set; }

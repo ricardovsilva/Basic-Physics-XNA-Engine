@@ -79,7 +79,21 @@ namespace Basic_Physics_XNA_Engine
 
         public SpriteBatch SpriteBatch { get; set; }
 
-        public Vector2 Position { get; set; }
+        public Vector2 Position {
+            get { return this.position; }
+            set { 
+                    this.Delta = value - this.position;
+                    this.position = value;
+                }
+        }
+
+        Vector2 position;
+
+        /// <summary>
+        /// Gets or sets a value indicating the change from previous
+        /// position.
+        /// </summary>
+        public Vector2 Delta { get; set; }
 
         public Rectangle Bounds
         {
@@ -101,18 +115,16 @@ namespace Basic_Physics_XNA_Engine
             {
                 IApplyPhysics colliderPhysics = (IApplyPhysics) collider;
 
+                float df = 0f;
                 Vector2 weightForce = new Vector2
                 {
                     X = 0,
-                    Y = -(colliderPhysics.Mass * colliderPhysics.Velocity.Y)/(gameTime.ElapsedGameTime.Milliseconds/1000f)
+                    Y = -(colliderPhysics.Mass * colliderPhysics.Velocity.Y) / (gameTime.ElapsedGameTime.Milliseconds * 0.001f) 
+                        - df*(colliderPhysics.Mass * colliderPhysics.Velocity.Y) / (gameTime.ElapsedGameTime.Milliseconds * 0.001f)
+                        - (colliderPhysics.Mass * colliderPhysics.WorldGravity.Force)
                 };
-
-                weightForce = new Vector2
-                {
-                    X = 0,
-                    Y = weightForce.Y - colliderPhysics.WorldGravity.Force*colliderPhysics.Mass
-                };
-
+                collider.Position = collider.Position - collider.Delta;
+                 
                 colliderPhysics.ApplyForce(weightForce, gameTime);
             }
         }
