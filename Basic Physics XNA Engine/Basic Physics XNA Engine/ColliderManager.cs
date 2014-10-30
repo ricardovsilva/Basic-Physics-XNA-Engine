@@ -11,7 +11,7 @@ namespace Basic_Physics_XNA_Engine
     /// </summary>
     public class ColliderManager : Microsoft.Xna.Framework.GameComponent
     {
-        private int collisionTollerance = 0;
+        //private int collisionTollerance = 0;
 
         public ColliderManager(Game game)
             : base(game)
@@ -37,20 +37,18 @@ namespace Basic_Physics_XNA_Engine
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
-        {
+        {            
             foreach (var collidable in CollidablesList)
             {
                 foreach (var otherCollidable in CollidablesList)
                 {
                     if (collidable != otherCollidable)
                     {
-                        Rectangle collidableBounds = collidable.Bounds;
-                        collidableBounds.Inflate(collisionTollerance, collisionTollerance);
-                        Rectangle othercollidableBounds = otherCollidable.Bounds;
-                        othercollidableBounds.Inflate(collisionTollerance, collisionTollerance);
-
-                        if (collidableBounds.Intersects(othercollidableBounds))
+                        if (collidable.Bounds.Intersects(otherCollidable.Bounds))
                         {
+                            
+                            //otherCollidable.Position
+
                             collidable.OnCollisionHappens(otherCollidable, gameTime);
                         }
                     }

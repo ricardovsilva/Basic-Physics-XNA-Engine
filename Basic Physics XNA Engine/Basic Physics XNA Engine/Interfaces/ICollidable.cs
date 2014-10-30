@@ -30,5 +30,12 @@ namespace Basic_Physics_XNA_Engine.Interfaces
         /// in collision.</param>
         /// <param name="gameTime">Reference to game time.</param>
         void OnCollisionHappens(ICollidable collider, GameTime gameTime);
+
+        /// <summary>
+        /// Gets or sets a value indicating the change from previous
+        /// position.
+        /// </summary>
+        Vector2 Delta { get; set; }
+
     }
 }
